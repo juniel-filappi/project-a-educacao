@@ -3,8 +3,9 @@ import { PrismaModule } from './prisma/prisma.module';
 import { APP_PIPE } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
-import { ConfigModule } from "@nestjs/config";
-import { envSchema } from "@/env";
+import { ConfigModule } from '@nestjs/config';
+import { envSchema } from '@/env';
+import { StudentModule } from './student/student.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { envSchema } from "@/env";
     PrismaModule,
     AuthModule,
     UserModule,
+    StudentModule,
   ],
   providers: [
     {

@@ -7,7 +7,7 @@ import { Env } from '@/env';
 import { PrismaModule } from '@/prisma/prisma.module';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from '@/auth/jwt.strategy';
-import { UserModule } from "@/user/user.module";
+import { UserModule } from '@/user/user.module';
 
 @Module({
   imports: [

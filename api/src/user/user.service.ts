@@ -7,8 +7,8 @@ import { hash } from 'bcryptjs';
 export class UserService {
   constructor(private readonly repository: UserRepository) {}
 
-  async findById(id: string) {
-    return this.repository.findByEmail(id);
+  async findById(id: number) {
+    return this.repository.findById(id);
   }
 
   async findUserByEmail(email: string) {

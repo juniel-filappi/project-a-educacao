@@ -1,9 +1,5 @@
 import { JwtService } from '@nestjs/jwt';
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { LoginDto } from '@/shared/dto/auth/login.dto';
 import { UserService } from '@/user/user.service';
 import { compare } from 'bcryptjs';
@@ -39,13 +35,13 @@ export class AuthService {
     const user = await this.userService.findUserByEmail(registerDto.email);
 
     if (user) {
-      throw new ConflictException('Usuário já cadastrado');
+      throw new BadRequestException('Usuário já cadastrado');
     }
 
     return this.userService.create(registerDto);
   }
 
-  async me(id: string) {
+  async me(id: number) {
     return this.userService.findById(id);
   }
 }
