@@ -16,7 +16,7 @@ export class AuthService {
     const user = await this.userService.findUserByEmail(loginDto.email);
 
     if (!user) {
-      throw new BadRequestException('Invalid credentials');
+      throw new BadRequestException('Credenciais inválidas');
     }
 
     const isValid = await compare(loginDto.password, user.password);
