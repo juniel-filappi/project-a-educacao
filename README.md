@@ -85,23 +85,17 @@ Primeiro clone o repositório em seu computador, por meio do terminal utilizando
  ---
 ### Documentação da arquitetura
 O projeto esta dividido em:
-- **Controller**
-- **Middleware**
-- **Repositories**
-- **Validators**
-- **Routes**
+- **Modules**
+- **Shared**
 - **Helpers**
 
-## Controller
-A camada Controller atua como intermediária entre as solicitações enviadas pelo Front-end e as respostas fornecidas pelo Model, processando os dados inseridos pelo usuário e transmitindo-os para outras camadas. Essa camada é fundamental para a estruturação da arquitetura MVC (Model-View-Controller).
-## Middleware
-Este componente é encarregado de filtrar as requisições e manipular as informações recebidas. Foram desenvolvidos dois middlewares: o primeiro, denominado authenticateToken, tem a responsabilidade de verificar se o usuário está autenticado na plataforma; o segundo, denominado errorMiddleware, trata os erros da aplicação seguindo o padrão apiMessage.
-## Repositories
-Responsável por implementar as lógicas de negócio relacionadas aos modelos de banco de dados.
-## Validators
-Responsável por receber, tratar e validar as informações provenientes do Front-end.
-## Routes
-Responsável por definir e gerenciar todas as rotas da API.
+## Modules
+Os módulos são responsáveis por agrupar as funcionalidades da aplicação. Cada módulo possui uma pasta com os seguintes arquivos:
+- **Controller**: responsável por receber as requisições e enviar as respostas.
+- **Service**: responsável por tratar as regras de negócio.
+- **Repository**: responsável por realizar as operações no banco de dados.
+## Shared
+Criado para receber as dto's e decorators que são compartilhados entre os módulos.
 ## Helpers
 Criado para desenvolver funções que podem ser reutilizadas em várias partes do código, visando manter a base do código organizada e legível.
 
@@ -110,15 +104,13 @@ Criado para desenvolver funções que podem ser reutilizadas em várias partes d
 
 #### TO DO API
 - [x] Adding ORM `Prisma 10`.
-- [x] Create `Repository Pattern` module.
-- [x] Use `SOLID` Arquiteture.
-- [x] Create auth routes.
+- [x] Create `Auth` module.
+- [x] Create `Student` module.
+- [x] Use `SOLID` Architecture.
+- [x] Configure `JWT` for authentication.
 - [x] Create `Middleware` authenticate.
-- [x] Implementing tratative errors.
-- [x] Use the default response api.
-- [x] Create students routes.
-- [ ] Create `swagger` documentation.
-- [x] Create tests integration.
+- [x] Create `swagger` documentation.
+- [x] Create tests e2e.
 
 
 #### TO DO WEB
@@ -135,4 +127,4 @@ Criado para desenvolver funções que podem ser reutilizadas em várias partes d
 
 ---
 
-<sup> Feito com 💙 por 👾<a href="https://github.com/juninho-dev/" target="_blank" rel="noopener">Juniel</a> ® 2024.</sup>
+<sup> Feito com 💙 por 👾<a href="https://github.com/juniel-filappi/" target="_blank" rel="noopener">Juniel</a> ® 2024.</sup>

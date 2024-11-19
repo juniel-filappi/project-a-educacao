@@ -41,7 +41,7 @@ export class StudentController {
   }
 
   @Post('')
-  @HttpCode(HttpStatus.CREATED) 
+  @HttpCode(HttpStatus.CREATED)
   async createStudent(
     @CurrentUser() user: UserPayload,
     @Body() data: CreateStudentDto,
