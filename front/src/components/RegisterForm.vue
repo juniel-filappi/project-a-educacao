@@ -17,19 +17,20 @@
       >
         <v-text-field
           :model-value="name"
-          :error="vuelidate.form.name.$invalid"
-          :error-messages="vuelidate.form.name.$errors?.map(error => error.$message)"
+          :error="vuelidate.form.name.$dirty && vuelidate.form.name.$invalid"
+          :error-messages="mapErrorsValidation(vuelidate.form.name.$errors)"
           max-errors="2"
           label="Nome Completo"
           required
           variant="outlined"
           @blur="vuelidate.form.name.$touch()"
           @update:model-value="$emit('update:name', $event)"
+          @input="vuelidate.form.name.$touch()"
         />
         <v-text-field
           :model-value="email"
-          :error="vuelidate.form.email.$invalid"
-          :error-messages="vuelidate.form.email.$errors?.map(error => error.$message)"
+          :error="vuelidate.form.email.$dirty && vuelidate.form.email.$invalid"
+          :error-messages="mapErrorsValidation(vuelidate.form.email.$errors)"
           max-errors="2"
           label="E-mail"
           required
@@ -37,20 +38,22 @@
           autocomplete="off"
           variant="outlined"
           @blur="vuelidate.form.email.$touch()"
+          @input="vuelidate.form.email.$touch()"
           @update:model-value="$emit('update:email', $event)"
         />
         <v-text-field
           :model-value="password"
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           :type="showPassword ? 'text' : 'password'"
-          :error="vuelidate.form.password.$invalid"
-          :error-messages="vuelidate.form.password.$errors?.map(error => error.$message)"
+          :error="vuelidate.form.password.$dirty && vuelidate.form.password.$invalid"
+          :error-messages="mapErrorsValidation(vuelidate.form.password.$errors)"
           max-errors="2"
           label="Senha"
           required
           variant="outlined"
           autocomplete="off"
           @blur="vuelidate.form.password.$touch()"
+          @input="vuelidate.form.password.$touch()"
           @click:append="showPassword = !showPassword"
           @update:model-value="$emit('update:password', $event)"
         />
@@ -76,6 +79,7 @@
 
 <script lang="ts">
 import useVuelidate from "@vuelidate/core";
+import { mapErrorsValidation } from "@/utils/helpers";
 
 export default {
   name: "RegisterForm",
@@ -104,5 +108,6 @@ export default {
       valid: false,
     };
   },
+  methods: {mapErrorsValidation},
 };
 </script>

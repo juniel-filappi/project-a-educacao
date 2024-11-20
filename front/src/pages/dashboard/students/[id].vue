@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <loading :loading />
-    <h2>Cadastro de Alunos</h2>
+    <h2>Atualizar Aluno</h2>
     <div class="mt-10">
       <student-form
         v-model:name="form.name"
@@ -9,6 +9,7 @@
         v-model:ra="form.ra"
         v-model:cpf="form.cpf"
         :vuelidate="v$"
+        have-id
       />
       <div class="d-flex justify-space-between">
         <v-btn
@@ -34,7 +35,7 @@
 <script lang="ts">
 import StudentForm from "@/components/StudentForm.vue";
 import { useVuelidate } from "@vuelidate/core";
-import { create } from "@/service/student/service";
+import { update, get } from "@/service/student/service";
 import { getError } from "@/utils/error";
 import Loading from "@/components/Loading.vue";
 import useToast from "@/composables/useToast";
@@ -46,6 +47,7 @@ export default {
   setup() {
     return {
       router: useRouter(),
+      route: useRoute(),
       v$: useVuelidate(),
       toast: useToast(),
     }
@@ -81,7 +83,26 @@ export default {
       },
     };
   },
+  created() {
+    this.loadStudent();
+  },
   methods: {
+    async loadStudent() {
+      try {
+        const { id } = this.route.params as { id: number };
+        const data = await get(id);
+
+        this.form = {
+          name: data.name,
+          email: data.email,
+          ra: data.ra,
+          cpf: data.cpf,
+        }
+      } catch (error) {
+        const treatedError = getError(error, "Não foi possível buscar o aluno");
+        this.toast.error(treatedError.title, treatedError.message)
+      }
+    },
     async handleSave() {
       this.v$.$touch();
 
@@ -92,12 +113,13 @@ export default {
 
       this.loading = true;
       try {
-        await create(this.form);
+        const { id } = this.route.params as { id: number };
+        await update(id, this.form);
 
-        this.toast.success("Sucesso", "Aluno cadastrado com sucesso");
+        this.toast.success("Sucesso", "Aluno atualizado com sucesso");
         await this.router.push('/dashboard');
       } catch (error) {
-        const treatedError = getError(error, "Não foi possível cadastrar o aluno");
+        const treatedError = getError(error, "Não foi possível atualizar o aluno");
         this.toast.error(treatedError.title, treatedError.message)
       } finally {
         this.loading = false;

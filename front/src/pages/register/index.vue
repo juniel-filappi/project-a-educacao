@@ -29,7 +29,8 @@ import { getError } from "@/utils/error";
 import { register } from "@/service/auth/service";
 import useVuelidate from "@vuelidate/core";
 import { required, email, minLength, helpers } from "@vuelidate/validators"
-import { EventBus } from "@/plugins/event-bus";
+import useToast from "@/composables/useToast";
+import { useRouter } from "vue-router";
 
 export default {
   name: "Register",
@@ -39,6 +40,8 @@ export default {
   },
   setup() {
     return {
+      toast: useToast(),
+      router: useRouter(),
       v$: useVuelidate(),
     };
   },
@@ -82,19 +85,16 @@ export default {
       try {
         await register(this.form);
 
-        EventBus.$emit("toast", {
-          title: "Cadastro realizado com sucesso",
-          text: "Você será redirecionado para a página de login",
-          color: "success",
-        });
-        this.$router.push('/');
+        this.toast.success(
+          "Cadastro realizado com sucesso",
+          "Você será redirecionado para a página de login"
+        );
+
+        await this.router.push('/');
       } catch (error) {
         const treatedError = getError(error, "Erro ao fazer cadastro");
-        EventBus.$emit("toast", {
-          title: treatedError.title,
-          text: treatedError.message,
-          color: "error",
-        });
+
+        this.toast.error(treatedError.title, treatedError.message);
       } finally {
         this.loading = false;
       }

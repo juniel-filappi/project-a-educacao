@@ -12,7 +12,7 @@
         dense
         flat
       >
-        <v-toolbar-title class="text-body-2 font-weight-bold grey--text">
+        <v-toolbar-title class="text-body-3 font-weight-bold grey--text">
           {{ title }}
         </v-toolbar-title>
       </v-toolbar>
@@ -46,15 +46,22 @@
 </template>
 
 <script lang="ts">
+export interface IOptions {
+  color?: string;
+  width?: number;
+  zIndex?: number;
+  noconfirm?: boolean;
+}
+
 export default {
   name: "ConfirmDialog",
   data() {
     return {
       dialog: false,
-      resolve: null,
-      reject: null,
-      message: null,
-      title: null,
+      resolve: null as any,
+      reject: null as any,
+      message: "",
+      title: "",
       options: {
         color: "grey lighten-3",
         width: 400,
@@ -64,7 +71,7 @@ export default {
     };
   },
   methods: {
-    open(title: string, message: string, options) {
+    open(title: string, message: string, options: IOptions) {
       this.dialog = true;
       this.title = title;
       this.message = message;

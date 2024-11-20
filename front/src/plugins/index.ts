@@ -13,7 +13,6 @@ import router from '../router'
 import type { App } from 'vue'
 import install from "@/plugins/http";
 import { useAuthStore } from "@/stores/auth";
-import { EventBus } from "@/plugins/event-bus";
 
 export function registerPlugins (app: App) {
   app.use(pinia)

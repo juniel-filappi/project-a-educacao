@@ -26,9 +26,9 @@ import Loading from "@/components/Loading.vue";
 import { getError } from "@/utils/error";
 import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
-import { EventBus } from "@/plugins/event-bus";
 import useVuelidate from "@vuelidate/core";
 import { email, helpers, minLength, required } from "@vuelidate/validators";
+import useToast from "@/composables/useToast";
 
 export default {
   name: "Login",
@@ -40,6 +40,7 @@ export default {
     return {
       authStore: useAuthStore(),
       router: useRouter(),
+      toast: useToast(),
       v$: useVuelidate(),
     }
   },
@@ -70,11 +71,7 @@ export default {
     async handleLogin() {
       this.v$.form.$touch();
       if (this.v$.form.$error) {
-        EventBus.$emit("toast", {
-          title: "Erro ao fazer login",
-          text: "Preencha os campos corretamente",
-          color: "error",
-        });
+        this.toast.error("Erro ao fazer login", "Preencha os campos corretamente");
 
         return;
       }
@@ -89,11 +86,8 @@ export default {
         await this.router.push("/dashboard");
       } catch (error) {
         const treatedError = getError(error, "Erro ao fazer login");
-        EventBus.$emit("toast", {
-          title: treatedError.title,
-          text: treatedError.message,
-          color: "error",
-        });
+
+        this.toast.error(treatedError.title, treatedError.message);
       } finally {
         this.loading = false;
       }

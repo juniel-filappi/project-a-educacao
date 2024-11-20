@@ -1,6 +1,8 @@
 # 🗺 Ed Tech
 
 <h1 align="center">
+   <img src="front/src/assets/logo-mais-a-educacao.svg" alt="Logo EdTech" width="200px">
+    <br>
    <a href="https://nestjs.com" target="_blank" rel="noopener">Nest.JS</a> | <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue.JS</a> 
 </h1>
 

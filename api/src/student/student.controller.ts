@@ -3,7 +3,9 @@ import {
   Body,
   Controller,
   Delete,
-  Get, HttpCode, HttpStatus,
+  Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -13,7 +15,6 @@ import {
 import { StudentService } from '@/student/student.service';
 import { CurrentUser } from '@/shared/decorator/current-user.decorator';
 import { UserPayload } from '@/auth/jwt.strategy';
-import { IStudentFilters } from '@/student/student.repository';
 import { CreateStudentDto } from '@/shared/dto/student/create-student.dto';
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 import { UpdateStudentDto } from '@/shared/dto/student/update-student.dto';
@@ -26,9 +27,21 @@ export class StudentController {
   @Get('')
   async getStudents(
     @CurrentUser() user: UserPayload,
-    @Query('filters') filters: IStudentFilters,
+    @Query('name') name: string,
+    @Query('email') email: string,
+    @Query('ra') ra: string,
+    @Query('cpf') cpf: string,
+    @Query('order') order: string,
+    @Query('sort') sort: string,
   ) {
-    return this.service.getStudents(user.sub, filters);
+    return this.service.getStudents(user.sub, {
+      name,
+      order,
+      sort,
+      email,
+      ra,
+      cpf,
+    });
   }
 
   @Get('/:id')

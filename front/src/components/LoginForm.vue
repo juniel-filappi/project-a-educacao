@@ -16,8 +16,8 @@
       >
         <v-text-field
           :model-value="email"
-          :error="vuelidate.form.email.$invalid"
-          :error-messages="vuelidate.form.email.$errors?.map(error => error.$message)"
+          :error="vuelidate.form.email.$dirty && vuelidate.form.email.$invalid"
+          :error-messages="mapErrorsValidation(vuelidate.form.email.$errors)"
           max-errors="2"
           label="E-mail"
           required
@@ -26,12 +26,13 @@
           autocomplete="email"
           @update:model-value="$emit('update:email', $event)"
           @blur="vuelidate.form.email.$touch()"
+          @input="vuelidate.form.email.$touch()"
         />
         <v-text-field
           :model-value="password"
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-          :error="vuelidate.form.password.$invalid"
-          :error-messages="vuelidate.form.password.$errors?.map(error => error.$message)"
+          :error="vuelidate.form.password.$dirty && vuelidate.form.password.$invalid"
+          :error-messages="mapErrorsValidation(vuelidate.form.password.$errors)"
           max-errors="2"
           :type="showPassword ? 'text' : 'password'"
           label="Senha"
@@ -41,6 +42,7 @@
           @click:append="showPassword = !showPassword"
           @update:model-value="$emit('update:password', $event)"
           @blur="vuelidate.form.password.$touch()"
+          @input="vuelidate.form.password.$touch()"
         />
       </v-form>
       <div class="text-end">
@@ -62,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import { getErrorsVuelidate } from '@/utils/helpers';
+import { mapErrorsValidation } from '@/utils/helpers';
 import useVuelidate from "@vuelidate/core";
 
 export default {
@@ -87,5 +89,8 @@ export default {
       showPassword: false,
     };
   },
+  methods: {
+    mapErrorsValidation,
+  }
 };
 </script>

@@ -9,6 +9,7 @@
           <v-text-field
             label="Pesquisar pelo nome"
             variant="outlined"
+            density="compact"
             @update:model-value="handleSearch($event)"
           />
         </v-col>
@@ -27,14 +28,16 @@
         :items="students"
         :headers
         no-data-text="Nenhum aluno encontrado"
+        items-per-page-text="Itens por página"
       >
         <template v-slot:item.actions="{ item }">
           <div class="d-flex ga-2">
             <v-btn
               v-tooltip:top="'Editar aluno'"
-              color="blue"
+              color="green"
               icon="mdi-pencil"
               size="small"
+              variant="text"
               @click="router.push(`/dashboard/students/${item.id}`)"
             />
             <v-btn
@@ -42,6 +45,7 @@
               color="red"
               icon="mdi-delete"
               size="small"
+              variant="text"
               @click="handleOpenDialogDelete(item.id)"
             />
           </div>
@@ -58,7 +62,9 @@ import { setMaskCpf } from "@/utils/helpers";
 import { debounce } from "lodash"
 import type { IStudent } from "@/service/student/interface";
 import { list, remove } from "@/service/student/service";
-import { EventBus } from "@/plugins/event-bus";
+import useToast from "@/composables/useToast";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import { ref } from "vue";
 
 export default {
   name: "Students",
@@ -66,6 +72,8 @@ export default {
   setup() {
     return {
       router: useRouter(),
+      toast: useToast(),
+      confirmDialog: ref<InstanceType<typeof ConfirmDialog>>(),
       headers: [
         {
           title: "Registro Acadêmico",
@@ -81,7 +89,7 @@ export default {
           title: "CPF",
           sortable: true,
           key: "cpf",
-          value: item => setMaskCpf(item.cpf),
+          value: (item: IStudent) => setMaskCpf(item.cpf),
         },
         {
           title: "Ações",
@@ -108,7 +116,7 @@ export default {
   },
   methods: {
     setMaskCpf,
-    async handleSearch(text: string): Promise<void>  {
+    async handleSearch(text: string)  {
       this.filters.name = text;
       await this.fetchStudents();
     },
@@ -119,17 +127,13 @@ export default {
         this.students = await list(this.filters);
       } catch (error) {
         const treatedError = getError(error, "Não foi possível listar os alunos");
-        EventBus.$emit("toast", {
-          title: treatedError.title,
-          text: treatedError.message,
-          color: "error",
-        });
+        this.toast.error(treatedError.title, treatedError.message);
       } finally {
         this.loading = false;
       }
     },
     async handleOpenDialogDelete(id: number) {
-      const value = await this.$refs.confirmDialog.open(
+      const value = await this.confirmDialog?.open(
         "Excluir Aluno",
         "Deseja realmente excluir este aluno?",
         { color: "red" }
@@ -143,20 +147,13 @@ export default {
       try {
         await remove(id);
 
-        EventBus.$emit("toast", {
-          title: "Sucesso!",
-          text: "Aluno excluído com sucesso",
-          color: "success",
-        });
+        this.toast.success("Sucesso", "Aluno excluído com sucesso");
 
         await this.fetchStudents();
       } catch (error) {
         const treatedError = getError(error, "Não foi possível excluir o aluno");
-        EventBus.$emit("toast", {
-          title: treatedError.title,
-          text: treatedError.message,
-          color: "error",
-        });
+
+        this.toast.error(treatedError.title, treatedError.message);
       } finally {
         this.loading = false;
       }
