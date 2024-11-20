@@ -31,6 +31,9 @@ export default [
         },
       ],
       'vue/multi-word-component-names': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      'vue/valid-v-slot': 'off',
+      'vue/no-v-text-v-html-on-component': 'off',
     }
   }
 ]

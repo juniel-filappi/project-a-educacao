@@ -7,7 +7,6 @@ export let http: AxiosInstance
 
 export function createInstance() {
   if (!http) {
-    console.log(import.meta.env.VITE_API_URL)
     http = axios.create({
       baseURL: import.meta.env.VITE_API_URL,
       headers: {"X-Application-Piperun": "CRM_Web_VueJs"},

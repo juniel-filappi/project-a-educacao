@@ -11,7 +11,7 @@ import { routes } from 'vue-router/auto-routes'
 import { useAuthStore } from "@/stores/auth";
 
 for (const route of routes) {
-  if (route.name === '/') {
+  if (route.name === '/' || route.path === '/register') {
     route.meta ??= {}
     route.meta.isPublic = true
   }
@@ -54,7 +54,7 @@ router.beforeEach(async (to, _from, next) => {
     }
 
     return next("/")
-  } catch (err) {
+  } catch {
     await authStore.logout()
 
     return next("/")

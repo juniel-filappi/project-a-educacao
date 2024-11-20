@@ -2,93 +2,94 @@
   <loading :loading />
   <v-container>
     <div class="mt-10 d-flex justify-center">
-      <login-card-form
+      <register-card-form
+        v-model:name="form.name"
         v-model:email="form.email"
         v-model:password="form.password"
         :vuelidate="v$"
+        @register="handleRegister"
       >
         <v-btn
           class="w-100 bg-orange"
           size="large"
-          @click="handleLogin"
-          @keyup.enter="handleLogin"
+          :disabled="!v$.form.$dirty || v$.form.$invalid"
+          @click="handleRegister"
         >
-          Entrar
+          Cadastrar
         </v-btn>
-      </login-card-form>
+      </register-card-form>
     </div>
   </v-container>
 </template>
 
 <script lang="ts">
-import LoginCardForm from "@/components/LoginForm.vue";
+import RegisterCardForm from "@/components/RegisterForm.vue";
 import Loading from "@/components/Loading.vue";
 import { getError } from "@/utils/error";
-import { useAuthStore } from "@/stores/auth";
-import { useRouter } from "vue-router";
-import { EventBus } from "@/plugins/event-bus";
+import { register } from "@/service/auth/service";
 import useVuelidate from "@vuelidate/core";
-import { email, helpers, minLength, required } from "@vuelidate/validators";
+import { required, email, minLength, helpers } from "@vuelidate/validators"
+import { EventBus } from "@/plugins/event-bus";
 
 export default {
-  name: "Login",
+  name: "Register",
   components: {
     Loading,
-    LoginCardForm,
+    RegisterCardForm,
   },
   setup() {
     return {
-      authStore: useAuthStore(),
-      router: useRouter(),
       v$: useVuelidate(),
-    }
+    };
   },
   data() {
     return {
       loading: false,
       form: {
-        email: "",
-        password: "",
+        name: '',
+        email: '',
+        password: '',
       }
     };
   },
   validations() {
     return {
       form: {
+        name: {
+          required: helpers.withMessage("Campo obrigatório", required),
+        },
         email: {
           required: helpers.withMessage("Campo obrigatório", required),
           email: helpers.withMessage("E-mail inválido", email),
         },
         password: {
           required: helpers.withMessage("Campo obrigatório", required),
-          minLength: helpers.withMessage("Senha deve ter no mínimo 8 caracteres", minLength(8)),
+          minLength: helpers.withMessage("Mínimo de 8 caracteres", minLength(8)),
         }
       }
     }
   },
   methods: {
-    async handleLogin() {
+    async handleRegister() {
       this.v$.form.$touch();
-      if (this.v$.form.$error) {
-        EventBus.$emit("toast", {
-          title: "Erro ao fazer login",
-          text: "Preencha os campos corretamente",
-          color: "error",
-        });
-
+      if (this.v$.form.$invalid) {
         return;
       }
 
-      this.v$.form.$reset()
+      this.v$.form.$reset();
 
       this.loading = true;
-
       try {
-        await this.authStore.login(this.form)
+        await register(this.form);
 
-        await this.router.push("/dashboard");
+        EventBus.$emit("toast", {
+          title: "Cadastro realizado com sucesso",
+          text: "Você será redirecionado para a página de login",
+          color: "success",
+        });
+        this.$router.push('/');
       } catch (error) {
-        const treatedError = getError(error, "Erro ao fazer login");
+        const treatedError = getError(error, "Erro ao fazer cadastro");
         EventBus.$emit("toast", {
           title: treatedError.title,
           text: treatedError.message,

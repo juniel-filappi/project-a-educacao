@@ -45,7 +45,7 @@ export const useAuthStore = defineStore("auth", {
 
       await this.saveTokens(access_token)
 
-      await storage.set("user", user)
+      await storage.set("user", JSON.stringify(user))
       this.user = user
     },
     async logout() {

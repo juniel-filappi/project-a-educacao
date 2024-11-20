@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main>
-       <Toast />
+      <Toast />
       <router-view />
     </v-main>
   </v-app>
